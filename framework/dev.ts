@@ -1,15 +1,18 @@
-import fs from "node:fs/promises";
+// import fs from "node:fs/promises";
 import express from "express";
 import { createServer } from "vite";
-import { render } from "../src/entry-server";
+// import { render } from "../src/entry-server";
 import path from "node:path";
+import { renderHtmlContent } from "./render";
 
 const port = process.env.PORT || 5173;
 const base = process.env.BASE || "/";
+const root = process.cwd();
 
 const app = express();
 
 const vite = await createServer({
+  root,
   server: { middlewareMode: true },
   appType: "custom",
   base,
@@ -19,9 +22,22 @@ app.use(vite.middlewares);
 
 app.use("*", async (req, res) => {
   try {
+    if (
+      req.originalUrl.endsWith(".tsx") ||
+      req.originalUrl.endsWith(".ts") ||
+      req.originalUrl.endsWith(".js")
+    ) {
+      const mod = await vite.transformRequest(req.originalUrl);
+      return res
+        .status(200)
+        .set({ "Content-Type": "text/javascript" })
+        .send(mod?.code);
+    }
     const url = req.originalUrl.replace(base, "");
+    // if (!url.endsWith(".html")) {
+    //   return;
+    // }
 
-    console.log({ foo: url });
     let before = "";
 
     if (url.startsWith("demos")) {
@@ -32,20 +48,26 @@ app.use("*", async (req, res) => {
 
       before = path.join("demos", pathAfterDemo);
     }
-    let template: string = await fs.readFile(
-      path.join(before, "index.html"),
-      "utf-8"
-    );
-    template = await vite.transformIndexHtml(url, template);
 
-    const rendered = await render();
+    const beforePath = path.join(root, before);
 
-    const html = template
-      //   .replace(`<!--app-head-->`, rendered.head ?? "")
-      .replace(`<!--app-html-->`, rendered.html ?? "");
+    const html = await renderHtmlContent(beforePath, {
+      dev: true,
+      vite,
+      url,
+    });
+    console.log({
+      url,
+      html,
+    });
+
+    // const html = template
+    //   //   .replace(`<!--app-head-->`, rendered.head ?? "")
+    //   .replace(`<!--app-html-->`, rendered.html ?? "");
 
     res.status(200).set({ "Content-Type": "text/html" }).send(html);
   } catch (e) {
+    console.error(e);
     vite?.ssrFixStacktrace(e);
     console.log(e.stack);
     res.status(500).end(e.stack);

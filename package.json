@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "serve dist",
-    "dev": "nodemon --watch framework/dev.ts --exec \"bun dev.ts\"",
+    "dev": "bun framework/dev.ts",
     "build": "tsc && bun framework/build.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -37,6 +37,6 @@
     "serve": "^14.2.2",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "vite": "^5.2.10"
   }
 }

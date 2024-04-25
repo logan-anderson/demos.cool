@@ -1,13 +1,14 @@
 import { writeFile, readFile } from "node:fs/promises";
 import path from "node:path";
-// import { fileURLToPath } from "node:url";
 import { build } from "vite";
 import { renameBuildToIndex } from "./renameBuildToIndex";
+import { renderHtmlContent } from "./render";
+
+// import { fileURLToPath } from "node:url";
 // const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const buildHtmlFile = async (folder) => {
   const p = path.join(folder, "entry-server.tsx");
-  console.log(p);
   const renderFunc = (await import(p)).render;
   const { html } = await renderFunc();
   const htmlTemplate = await readFile(
@@ -26,6 +27,12 @@ const buildAll = async () => {
   const folders = paths.map((f) => path.join(root, f));
   for (const folder of folders) {
     await buildHtmlFile(folder);
+    const htmlContent = await renderHtmlContent(folder, {
+      dev: false,
+      url: "asdf",
+    });
+    const htmlFile = path.join(folder, "build.html");
+    await writeFile(htmlFile, htmlContent);
   }
   const input = paths.reduce((acc, p) => {
     const parts = p.split("/");
