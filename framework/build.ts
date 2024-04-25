@@ -2,6 +2,7 @@ import { writeFile, readFile } from "node:fs/promises";
 import path from "node:path";
 // import { fileURLToPath } from "node:url";
 import { build } from "vite";
+import { renameBuildToIndex } from "./renameBuildToIndex";
 // const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const buildHtmlFile = async (folder) => {
@@ -20,22 +21,30 @@ const buildHtmlFile = async (folder) => {
   await writeFile(htmlFile, htmlContent);
 };
 const buildAll = async () => {
+  const paths = ["", "demos/local-llm"];
   const root = process.cwd();
-  const folders = ["./", "./demos/local-llm"].map((f) => path.join(root, f));
+  const folders = paths.map((f) => path.join(root, f));
   for (const folder of folders) {
     await buildHtmlFile(folder);
   }
+  const input = paths.reduce((acc, p) => {
+    const parts = p.split("/");
+    const name = parts[parts.length - 1] || "main";
+    acc[name] = "./" + path.join(p, "build.html");
+    return acc;
+  }, {});
+
   await build({
     //   root: path.resolve(__dirname, "./project"),
     //   base: "/",
     build: {
       rollupOptions: {
-        input: {
-          main: "./build.html",
-          "local-llm": "./demos/local-llm/build.html",
-        },
+        input,
       },
     },
   });
+
+  // rename all html in dist from build.html to index.html
+  await renameBuildToIndex(path.join(root, "dist"));
 };
 buildAll();

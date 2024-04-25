@@ -4,10 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev-server": "nodemon --watch dev.ts --exec \"bun dev.ts\"",
-    "server": "bun server.ts",
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "start": "serve dist",
+    "dev": "nodemon --watch framework/dev.ts --exec \"bun dev.ts\"",
+    "build": "tsc && bun framework/build.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -35,6 +34,7 @@
     "eslint-plugin-react-refresh": "^0.4.6",
     "nodemon": "^3.1.0",
     "postcss": "^8.4.38",
+    "serve": "^14.2.2",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
