@@ -4,6 +4,7 @@ import { createServer } from "vite";
 // import { render } from "../src/entry-server";
 import path from "node:path";
 import { renderHtmlContent } from "./render";
+import { getDemos } from "./getDemos";
 
 const port = process.env.PORT || 5173;
 const base = process.env.BASE || "/";
@@ -48,10 +49,13 @@ app.use("*", async (req, res) => {
 
     const beforePath = path.join(root, before);
 
+    const demos = getDemos(root);
+
     const html = await renderHtmlContent(beforePath, {
       dev: true,
       vite,
       url,
+      demos,
     });
 
     res.status(200).set({ "Content-Type": "text/html" }).send(html);

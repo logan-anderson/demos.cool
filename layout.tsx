@@ -1,7 +1,7 @@
 import React from "react";
 import { Header } from "./src/components/header";
 
-const Layout = () => {
+const Layout = ({ demos }: { demos: string[] }) => {
   return (
     <html lang="en">
       <head>
@@ -13,7 +13,7 @@ const Layout = () => {
         {/* <HtmlComment text="app-head" /> */}
       </head>
       <body className="bg-brand-800 text-gray-200">
-        <Header />
+        <Header demos={demos} />
         <div id="root"></div>
         <script type="module" src="/src/entry-client.tsx"></script>
       </body>

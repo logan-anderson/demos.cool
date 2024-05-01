@@ -1,12 +1,11 @@
-// import React from "react";
 import ReactDOMServer from "react-dom/server";
-// import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ViteDevServer } from "vite";
 
-type Options =
+type Options = { demos: string[] } & (
   | { dev?: false; url: string }
-  | { dev: true; vite: ViteDevServer; url: string };
+  | { dev: true; vite: ViteDevServer; url: string }
+);
 
 const loadModule = async (module: string, options: Options) => {
   if (options.dev) {
@@ -26,7 +25,9 @@ const getRenderFunction = async (folder, options: Options) => {
 
 export const renderHtmlContent = async (folder, opts: Options) => {
   const layout = await loadModule(path.join(folder, "layout.tsx"), opts);
-  let htmlTemplate = ReactDOMServer.renderToStaticMarkup(layout.default());
+  let htmlTemplate = ReactDOMServer.renderToStaticMarkup(
+    layout.default({ demos: opts.demos })
+  );
   if (opts.dev) {
     htmlTemplate = await opts.vite.transformIndexHtml(opts.url, htmlTemplate);
   }

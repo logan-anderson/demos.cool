@@ -30,6 +30,8 @@ const buildAll = async () => {
     const htmlContent = await renderHtmlContent(folder, {
       dev: false,
       url: "asdf",
+      // TODO: get demos from folder
+      demos: [],
     });
     const htmlFile = path.join(folder, "build.html");
     await writeFile(htmlFile, htmlContent);
