@@ -1,4 +1,6 @@
-import { readFile } from "node:fs/promises";
+// import React from "react";
+import ReactDOMServer from "react-dom/server";
+// import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ViteDevServer } from "vite";
 
@@ -6,27 +8,34 @@ type Options =
   | { dev?: false; url: string }
   | { dev: true; vite: ViteDevServer; url: string };
 
+const loadModule = async (module: string, options: Options) => {
+  if (options.dev) {
+    const mod = await options.vite.ssrLoadModule(module);
+    return mod;
+  }
+  const mod = await import(module);
+  return mod;
+};
+
 const getRenderFunction = async (folder, options: Options) => {
   const p = path.join(folder, "entry-server.tsx");
-  if (options.dev) {
-    const { render } = await options.vite.ssrLoadModule(p);
-    console.log({ render });
-    return render;
-  }
-  const renderFunc = (await import(p)).render;
+  const mod = await loadModule(p, options);
+  const renderFunc = mod.render;
   return renderFunc;
 };
 
 export const renderHtmlContent = async (folder, opts: Options) => {
-  let htmlTemplate = await readFile(path.join(folder, "layout.html"), "utf-8");
+  const layout = await loadModule(path.join(folder, "layout.tsx"), opts);
+  let htmlTemplate = ReactDOMServer.renderToStaticMarkup(layout.default());
   if (opts.dev) {
     htmlTemplate = await opts.vite.transformIndexHtml(opts.url, htmlTemplate);
   }
   const renderFunc = await getRenderFunction(folder, opts);
   const { html } = await renderFunc(opts.url);
-  console.log({ html });
-
-  const htmlContent = htmlTemplate.replace("<!--app-html-->", html);
+  const el = '<div id="root">';
+  const entryPoint = htmlTemplate.indexOf(el) + el.length;
+  const htmlContent =
+    htmlTemplate.slice(0, entryPoint) + html + htmlTemplate.slice(entryPoint);
 
   return htmlContent;
 };

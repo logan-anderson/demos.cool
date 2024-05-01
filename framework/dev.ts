@@ -34,9 +34,6 @@ app.use("*", async (req, res) => {
         .send(mod?.code);
     }
     const url = req.originalUrl.replace(base, "");
-    // if (!url.endsWith(".html")) {
-    //   return;
-    // }
 
     let before = "";
 
@@ -56,14 +53,6 @@ app.use("*", async (req, res) => {
       vite,
       url,
     });
-    console.log({
-      url,
-      html,
-    });
-
-    // const html = template
-    //   //   .replace(`<!--app-head-->`, rendered.head ?? "")
-    //   .replace(`<!--app-html-->`, rendered.html ?? "");
 
     res.status(200).set({ "Content-Type": "text/html" }).send(html);
   } catch (e) {
