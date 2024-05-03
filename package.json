@@ -14,8 +14,10 @@
     "bun": "^1.1.4",
     "compression": "^1.7.4",
     "express": "^4.19.2",
+    "flamethrower-router": "0.0.0-meme.12",
     "hono": "^4.2.7",
     "htmx.org": "^1.9.12",
+    "idb": "^8.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sirv": "^2.0.4"

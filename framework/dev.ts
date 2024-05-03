@@ -5,6 +5,7 @@ import { createServer } from "vite";
 import path from "node:path";
 import { renderHtmlContent } from "./render";
 import { getDemos } from "./getDemos";
+import { vitePlugins } from "./vitePlugins";
 
 const port = process.env.PORT || 5173;
 const base = process.env.BASE || "/";
@@ -17,6 +18,7 @@ const vite = await createServer({
   server: { middlewareMode: true },
   appType: "custom",
   base,
+  plugins: vitePlugins,
 });
 
 app.use(vite.middlewares);

@@ -10,12 +10,12 @@ const Layout = ({ demos }: { demos: string[] }) => {
         <link rel="icon" type="image/svg+xml" href="/vite.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Vite + React</title>
-        {/* <HtmlComment text="app-head" /> */}
+        <script defer type="module" src="/src/router.ts"></script>
       </head>
       <body className="bg-brand-800 text-gray-200">
         <Header demos={demos} />
         <div id="root"></div>
-        <script type="module" src="/src/entry-client.tsx"></script>
+        <script data-reload type="module" src="/src/entry-client.tsx"></script>
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import { build } from "vite";
 import { renameBuildToIndex } from "./renameBuildToIndex";
 import { renderHtmlContent } from "./render";
 import { getDemos } from "./getDemos";
+import { vitePlugins } from "./vitePlugins";
 
 // const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -32,6 +33,7 @@ const buildAll = async () => {
   }, {});
 
   await build({
+    appType: "mpa",
     //   root: path.resolve(__dirname, "./project"),
     //   base: "/",
     build: {
@@ -39,6 +41,7 @@ const buildAll = async () => {
         input,
       },
     },
+    plugins: vitePlugins,
   });
 
   // rename all html in dist from build.html to index.html
