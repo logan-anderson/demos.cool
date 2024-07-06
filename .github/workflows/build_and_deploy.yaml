@@ -21,11 +21,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 8
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest # or specify a version
-      - name: Install dependencies
-        run: pnpm install
+          bun-version: 1.0.7 # or specify a version
       - name: build
         run: pnpm build
   deploy:
