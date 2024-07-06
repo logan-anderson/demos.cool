@@ -1,5 +1,6 @@
 import ReactDOMServer from "react-dom/server";
 import path from "node:path";
+import fs from "fs/promises";
 import { ViteDevServer } from "vite";
 
 type Options = { demos: string[] } & (
@@ -8,25 +9,56 @@ type Options = { demos: string[] } & (
 );
 
 const loadModule = async (module: string, options: Options) => {
+  try {
+    await fs.stat(module);
+  } catch (e) {
+    return {
+      success: false,
+      error: new Error(`Module ${module} not found`),
+    } as const;
+  }
   if (options.dev) {
     const mod = await options.vite.ssrLoadModule(module);
-    return mod;
+    return {
+      success: true,
+      module: mod,
+    } as const;
   }
   const mod = await import(module);
-  return mod;
+  return {
+    success: true,
+    module: mod,
+  } as const;
 };
 
 const getRenderFunction = async (folder, options: Options) => {
   const p = path.join(folder, "entry-server.tsx");
-  const mod = await loadModule(p, options);
-  const renderFunc = mod.render;
+  const res = await loadModule(p, options);
+  if (!res.success) {
+    return async () => {
+      const html = await fs.readFile(path.join(folder, "page.html"), "utf-8");
+      return {
+        html,
+      };
+    };
+  }
+  const renderFunc = res.module.render;
   return renderFunc;
 };
 
 export const renderHtmlContent = async (folder, opts: Options) => {
-  const layout = await loadModule(path.join(folder, "layout.tsx"), opts);
+  let layoutRes = await loadModule(path.join(folder, "layout.tsx"), opts);
+  if (!layoutRes.success) {
+    layoutRes = await loadModule(
+      path.join(process.cwd(), "defaultLayout.tsx"),
+      opts
+    );
+    if (!layoutRes.success) {
+      throw layoutRes.error;
+    }
+  }
   let htmlTemplate = ReactDOMServer.renderToStaticMarkup(
-    layout.default({ demos: opts.demos })
+    layoutRes.module.default({ demos: opts.demos })
   );
   if (opts.dev) {
     htmlTemplate = await opts.vite.transformIndexHtml(opts.url, htmlTemplate);
