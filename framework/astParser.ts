@@ -47,13 +47,15 @@ const customParser = ({ injectScript, innerHtml }: Options) => {
   };
 };
 
-export const insertIntoIdRoot = (options: Options) => {
-  const { outerHtml } = options;
-
-  const test = unified()
+export const getProcessor = (options: Options) => {
+  return unified()
     .use(rehypeParse)
     .use(customParser, options)
-    .use(rehypeStringify)
-    .processSync(outerHtml);
-  return String(test);
+    .use(rehypeStringify);
+};
+
+export const insertIntoIdRoot = (options: Options) => {
+  const { outerHtml } = options;
+  const output = getProcessor(options).processSync(outerHtml);
+  return String(output);
 };
