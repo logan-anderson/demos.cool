@@ -2,21 +2,31 @@ import ReactDOMServer from "react-dom/server";
 import path from "node:path";
 import fs from "fs/promises";
 import { ViteDevServer } from "vite";
+import { insertIntoIdRoot } from "./astParser";
 
 type Options = { demos: string[] } & (
   | { dev?: false; url: string }
   | { dev: true; vite: ViteDevServer; url: string }
 );
 
-const loadModule = async (module: string, options: Options) => {
+const fileExists = async (path: string) => {
   try {
-    await fs.stat(module);
+    await fs.stat(path);
+    return true;
   } catch (e) {
+    return false;
+  }
+};
+
+const loadModule = async (module: string, options: Options) => {
+  const exists = await fileExists(module);
+  if (!exists) {
     return {
       success: false,
       error: new Error(`Module ${module} not found`),
     } as const;
   }
+
   if (options.dev) {
     const mod = await options.vite.ssrLoadModule(module);
     return {
@@ -47,16 +57,10 @@ const getRenderFunction = async (folder, options: Options) => {
 };
 
 export const renderHtmlContent = async (folder, opts: Options) => {
-  let layoutRes = await loadModule(path.join(folder, "layout.tsx"), opts);
-  if (!layoutRes.success) {
-    layoutRes = await loadModule(
-      path.join(process.cwd(), "defaultLayout.tsx"),
-      opts
-    );
-    if (!layoutRes.success) {
-      throw layoutRes.error;
-    }
-  }
+  const layoutRes = await loadModule(
+    path.join(process.cwd(), "rootLayout.tsx"),
+    opts
+  );
   let htmlTemplate = ReactDOMServer.renderToStaticMarkup(
     layoutRes.module.default({ demos: opts.demos })
   );
@@ -64,11 +68,17 @@ export const renderHtmlContent = async (folder, opts: Options) => {
     htmlTemplate = await opts.vite.transformIndexHtml(opts.url, htmlTemplate);
   }
   const renderFunc = await getRenderFunction(folder, opts);
-  const { html } = await renderFunc(opts.url);
-  const el = '<div id="root">';
-  const entryPoint = htmlTemplate.indexOf(el) + el.length;
-  const htmlContent =
-    htmlTemplate.slice(0, entryPoint) + html + htmlTemplate.slice(entryPoint);
+  const { html: innerHtml } = await renderFunc(opts.url);
+  const clientScriptPath = path.join(folder, "entry-client.tsx");
+  const clientScript = (await fileExists(clientScriptPath)) && {
+    path: clientScriptPath,
+  };
+
+  const htmlContent = insertIntoIdRoot({
+    outerHtml: htmlTemplate,
+    innerHtml,
+    injectScript: clientScript,
+  });
 
   return htmlContent;
 };

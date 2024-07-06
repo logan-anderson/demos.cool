@@ -15,12 +15,15 @@
     "compression": "^1.7.4",
     "express": "^4.19.2",
     "flamethrower-router": "0.0.0-meme.12",
+    "hast-util-from-html": "^2.0.1",
+    "hast-util-to-html": "^9.0.1",
     "hono": "^4.2.7",
     "htmx.org": "^1.9.12",
     "idb": "^8.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sirv": "^2.0.4"
+    "sirv": "^2.0.4",
+    "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",
