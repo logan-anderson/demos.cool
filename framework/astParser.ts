@@ -1,27 +1,67 @@
-import { unified } from "unified";
-import { fromHtml } from "hast-util-from-html";
 import { visit } from "unist-util-visit";
-import rehypeParse from "rehype-parse";
-import rehypeStringify from "rehype-stringify";
-import type { Element } from "hast";
+import { unified } from "unified";
 
-type Options = {
-  outerHtml: string;
-  innerHtml: string;
-  injectScript?:
-    | {
-        path: string;
+import type { Element } from "hast";
+import rehypeParse from "rehype-parse";
+
+type InjectScript =
+  | {
+      path: string;
+    }
+  | false;
+
+export type OverwriteRootOptions =
+  | {
+      rootEl: string;
+    }
+  | false;
+export const overwriteRootPlugin = (args: OverwriteRootOptions) => {
+  if (!args) return () => {};
+  const rootEl = args.rootEl;
+
+  const els = unified()
+    .use(rehypeParse, { fragment: true })
+    .parse(rootEl).children;
+  if (els.length !== 1) {
+    throw new Error("Root element must have exactly one child");
+  }
+  const root = els[0].type === "element" ? els[0] : null;
+  if (!root) {
+    throw new Error("Root element must be an element");
+  }
+
+  return (tree) => {
+    visit(tree, "element", (node: Element) => {
+      if (node.tagName === "div" && node.properties.id === "root") {
+        node.properties = {
+          ...node.properties,
+          ...root.properties,
+        };
+        node.tagName = root.tagName;
       }
-    | false;
+    });
+  };
 };
 
-const customParser = ({ injectScript, innerHtml }: Options) => {
-  const innerElArr = fromHtml(innerHtml).children.filter(
-    (x) => x.type === "element"
-  );
-  if (innerElArr === undefined || innerElArr.length === 0) {
-    throw new Error("inner element not found");
-  }
+export type InjectPluginOptions = {
+  injectScript?: InjectScript;
+  innerHtml: string;
+};
+
+export const injectPlugin = ({
+  injectScript,
+  innerHtml,
+}: {
+  injectScript?: InjectScript;
+  innerHtml: string;
+}) => {
+  const innerElArr = unified()
+    .use(rehypeParse, {
+      fragment: true,
+    })
+    .parse(innerHtml)
+    .children.filter((x) => x.type === "element");
+
   return (tree) => {
     visit(tree, "element", (node: Element) => {
       if (node.tagName === "body" && injectScript) {
@@ -45,17 +85,4 @@ const customParser = ({ injectScript, innerHtml }: Options) => {
       }
     });
   };
-};
-
-export const getProcessor = (options: Options) => {
-  return unified()
-    .use(rehypeParse)
-    .use(customParser, options)
-    .use(rehypeStringify);
-};
-
-export const insertIntoIdRoot = (options: Options) => {
-  const { outerHtml } = options;
-  const output = getProcessor(options).processSync(outerHtml);
-  return String(output);
 };
