@@ -9,7 +9,7 @@ const Layout = ({ demos }: { demos: string[] }) => {
         <link rel="stylesheet" href="/src/global.css" />
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Default Layout</title>
+        <title>Demos.cool</title>
         <script defer type="module" src="/src/router.ts"></script>
       </head>
       <body className="bg-brand-800 text-gray-200">
