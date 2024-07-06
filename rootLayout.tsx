@@ -14,7 +14,9 @@ const Layout = ({ demos }: { demos: string[] }) => {
       </head>
       <body className="bg-brand-800 text-gray-200">
         <Header demos={demos} />
-        <div id="root"></div>
+        <div className="max-w-7xl mx-auto">
+          <div id="root"></div>
+        </div>
       </body>
     </html>
   );
