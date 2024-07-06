@@ -24,10 +24,12 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: 8
+          version: 7
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.0.7 # or specify a version
+      - name: Install deps
+        run: pnpm install
       - name: build
         run: pnpm build
   deploy:
