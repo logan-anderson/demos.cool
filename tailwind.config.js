@@ -8,22 +8,35 @@ export default {
   theme: {
     extend: {
       typography: ({ theme }) => ({
+        DEFAULT: {
+          css: {
+            a: {
+              fontWeight: "600",
+              "&:hover": {
+                color: theme("colors.brand.100"),
+              },
+            },
+            strong: {
+              fontWeight: "800",
+            },
+          },
+        },
         brand: {
           css: {
             "--tw-prose-body": theme("colors.gray[300]"),
             "--tw-prose-headings": theme("colors.gray[100]"),
             "--tw-prose-bullets": theme("colors.brand[200]"),
+            "--tw-prose-bold": theme("colors.brand[50]"),
+            "--tw-prose-code": theme("colors.brand[200]"),
+            "--tw-prose-pre-code": theme("colors.brand[100]"),
             // Not tested
             "--tw-prose-lead": theme("colors.brand[50]"),
             "--tw-prose-links": theme("colors.brand[200]"),
-            "--tw-prose-bold": theme("colors.brand[900]"),
             "--tw-prose-counters": theme("colors.brand[600]"),
             "--tw-prose-hr": theme("colors.brand[300]"),
             "--tw-prose-quotes": theme("colors.brand[900]"),
             "--tw-prose-quote-borders": theme("colors.brand[300]"),
             "--tw-prose-captions": theme("colors.brand[700]"),
-            "--tw-prose-code": theme("colors.brand[900]"),
-            "--tw-prose-pre-code": theme("colors.brand[100]"),
             "--tw-prose-pre-bg": theme("colors.brand[900]"),
             "--tw-prose-th-borders": theme("colors.brand[300]"),
             "--tw-prose-td-borders": theme("colors.brand[200]"),

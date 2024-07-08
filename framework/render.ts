@@ -81,7 +81,7 @@ const getInnerHtml = async (folder, opts: Options) => {
   const serverEntry = files.find((f) => f.name === "entry-server.tsx");
   if (serverEntry && serverEntry.exists) {
     const mod = await loadModule(serverEntry.path, opts);
-    return mod.module.render(opts.url).html;
+    return (await mod.module.render(opts.url)).html;
   }
 
   console.warn(
