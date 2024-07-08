@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./src/App";
+import { HomePage } from "./src/home/homePage";
 
 const hydrateRoot = () => {
   console.log("hydrating root main");
@@ -12,7 +12,7 @@ const hydrateRoot = () => {
   ReactDOM.hydrateRoot(
     el,
     <React.StrictMode>
-      <App />
+      <HomePage />
     </React.StrictMode>
   );
 };

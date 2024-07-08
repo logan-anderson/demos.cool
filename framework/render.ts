@@ -102,7 +102,7 @@ const getLayoutHtml = async (opts: Options) => {
     opts
   );
   let htmlTemplate = ReactDOMServer.renderToStaticMarkup(
-    layoutRes.module.default({ demos: opts.demos })
+    layoutRes.module.default({ demos: opts.demos, url: opts.url })
   );
   if (opts.dev) {
     htmlTemplate = await opts.vite.transformIndexHtml(opts.url, htmlTemplate);

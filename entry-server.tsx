@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOMServer from "react-dom/server";
-import App from "./src/App";
+import { HomePage } from "./src/home/homePage";
 
 export function render() {
   const html = ReactDOMServer.renderToString(
     <React.StrictMode>
-      <App />
+      <HomePage />
     </React.StrictMode>
   );
   return { html };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Header } from "./src/components/header";
 
-const Layout = ({ demos }: { demos: string[] }) => {
+const Layout = ({ demos, url }: { demos: string[]; url: string }) => {
   return (
     <html lang="en">
       <head>
@@ -12,8 +12,9 @@ const Layout = ({ demos }: { demos: string[] }) => {
         <title>Demos.cool</title>
         <script defer type="module" src="/src/router.ts"></script>
       </head>
-      <body className="bg-brand-800 text-gray-200">
-        <Header demos={demos} />
+      {/* <body className="bg-gradient-to-r from-brand to-brand-50 text-gray-100"> */}
+      <body className="bg-gradient-to-r from-brand-700 via-brand-600 to-brand-500 text-gray-100">
+        <Header demos={demos} url={url} />
         <div className="max-w-7xl mx-auto">
           <div id="root"></div>
         </div>

@@ -1,4 +1,4 @@
-export const Header = ({ demos }: { demos: string[] }) => {
+export const Header = ({ demos, url }: { demos: string[]; url: string }) => {
   return (
     <header>
       <nav
@@ -14,8 +14,10 @@ export const Header = ({ demos }: { demos: string[] }) => {
             {demos.map((demo) => (
               <a
                 key={demo}
-                href={`/demos/${demo}`}
-                className="text-sm font-semibold leading-6 text-gray-200"
+                aria-pressed={url === `demos/${demo}/` ? "true" : "false"}
+                href={`/demos/${demo}/`}
+                // className="text-sm font-semibold leading-6"
+                className="text-sm font-semibold leading-6 p-2 shadow-[0_9px_0_rgb(0,0,0)] hover:shadow-[0_4px_0px_rgb(0,0,0)] aria-pressed:shadow-[0_4px_0px_rgb(0,0,0)]  bg-brand-500 ease-out hover:translate-y-1  aria-pressed:translate-y-1  transition-all rounded"
               >
                 {demo}
               </a>
