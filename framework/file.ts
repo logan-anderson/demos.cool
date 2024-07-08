@@ -35,6 +35,10 @@ export const FILES: ConstantFiles[] = [
     name: "entry-server.tsx",
     type: "typescript",
   },
+  {
+    name: "entry-client.tsx",
+    type: "typescript",
+  },
 ];
 
 export const fileExists = async (path: string) => {

@@ -9,8 +9,8 @@ export const HomePage = () => {
         <p className="text-2xl my-3">
           This is my personal collection of
           <strong className="text-brand-50 font-extrabold"> cool </strong>demos
-          all built with my own homebrewed framework that handles SSG and SSR in
-          any framework.
+          all built with my own homebrewed 🍺 framework that handles SSG and SSR
+          in any framework.
         </p>
         <div className="my-7">
           <a className="p-2 rounded-full bg-brand-50" href="/demos">

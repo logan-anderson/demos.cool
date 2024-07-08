@@ -3,7 +3,7 @@ export default {
   content: [
     "./rootLayout.tsx",
     "./src/**/*.{js,ts,jsx,tsx}",
-    "demos/**/*.{js,ts,jsx,tsx,html}",
+    "pages/**/*.{js,ts,jsx,tsx,html}",
   ],
   theme: {
     extend: {

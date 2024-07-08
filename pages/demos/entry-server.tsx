@@ -1,11 +1,10 @@
 import React from "react";
 import ReactDOMServer from "react-dom/server";
-import { HomePage } from "./src/home/homePage";
 
 export function render() {
   const html = ReactDOMServer.renderToString(
     <React.StrictMode>
-      <HomePage />
+      <h1>Hello, World!</h1>
     </React.StrictMode>
   );
   return { html };
