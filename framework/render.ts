@@ -66,7 +66,7 @@ const mdToHtml = async (md: string) => {
  *
  * @param folder the folder to get the inner html from
  */
-const getInnerHtml = async (folder, opts: Options) => {
+const getInnerHtml = async (folder: string, opts: Options) => {
   const files = await getFiles(folder);
   const htmlFile = files.find((f) => f.type === "html");
   if (htmlFile && htmlFile.exists) {
@@ -131,7 +131,7 @@ export const getProcessor = ({
     .use(rehypeStringify);
 };
 
-export const renderHtmlContent = async (folder, opts: Options) => {
+export const renderHtmlContent = async (folder: string, opts: Options) => {
   const layoutHtml = await getLayoutHtml(opts);
   const innerHtml = await getInnerHtml(folder, opts);
 

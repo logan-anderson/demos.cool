@@ -40,6 +40,8 @@ const buildAll = async () => {
   const input = paths.reduce((acc, p) => {
     const parts = p.split("/");
     const name = parts[parts.length - 1] || "main";
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     acc[name] = "./" + path.join(p, "build.html");
     return acc;
   }, {});

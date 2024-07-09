@@ -1,7 +1,7 @@
 import { readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
-function listFolders(directory) {
+function listFolders(directory: string) {
   try {
     // Get the list of files and folders in the directory
     const items = readdirSync(directory);
@@ -19,6 +19,6 @@ function listFolders(directory) {
   }
 }
 
-export const getDemos = (root) => {
+export const getDemos = (root: string) => {
   return listFolders(path.join(root, "demos"));
 };

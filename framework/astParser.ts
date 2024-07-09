@@ -31,8 +31,8 @@ export const overwriteRootPlugin = (args: OverwriteRootOptions) => {
     throw new Error("Root element must be an element");
   }
 
-  return (tree) => {
-    visit(tree, "element", (node: Element) => {
+  return (tree: Element) => {
+    visit(tree, "element", (node) => {
       if (node.tagName === "div" && node.properties.id === "root") {
         node.properties = {
           ...node.properties,
@@ -80,8 +80,8 @@ export const injectPlugin = ({
     .parse(innerHtml)
     .children.filter((x) => x.type === "element");
 
-  return (tree) => {
-    visit(tree, "element", (node: Element) => {
+  return (tree: Element) => {
+    visit(tree, "element", (node) => {
       if (els.length > 0 && !injectScript) {
         console.warn(
           "Props were not injected because injectScript was not provided"

@@ -1,6 +1,6 @@
 import React from "react";
 
-export const HomePage = () => {
+export const HomePage: React.FC = () => {
   return (
     <main>
       <link rel="stylesheet" href="/src/home/homePage.css" />
