@@ -81,4 +81,4 @@ const Layout = ({ demos, url }: { demos: string[]; url: string }) => {
     </html>
   );
 };
-export default Layout;
+export default Layout as React.FC<{ demos: string[]; url: string }>;
