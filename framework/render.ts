@@ -15,6 +15,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
+import { ServerFrameworkContext } from "./frameworkContext";
 
 type Options = { demos: string[] } & (
   | { dev?: false; url: string }
@@ -81,7 +82,13 @@ const getInnerHtml = async (folder, opts: Options) => {
   const serverEntry = files.find((f) => f.name === "entry-server.tsx");
   if (serverEntry && serverEntry.exists) {
     const mod = await loadModule(serverEntry.path, opts);
-    return (await mod.module.render(opts.url)).html;
+    const ctx = new ServerFrameworkContext().getInstance();
+    ctx.resetProps();
+    return (
+      await mod.module.render({
+        frameworkContext: ctx,
+      })
+    ).html;
   }
 
   console.warn(

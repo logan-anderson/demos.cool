@@ -1,18 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./src/App";
+import { FrontendFrameworkContext } from "../../../framework/frontend";
 
 const hydrateRoot = () => {
-  console.log("hydrating root demo");
   const el = document.getElementById("root");
 
   if (!el) {
     throw new Error("Root element not found");
   }
+  const ctx = new FrontendFrameworkContext();
+
   ReactDOM.hydrateRoot(
     el,
     <React.StrictMode>
-      <App />
+      <App ctx={ctx} />
     </React.StrictMode>
   );
 };

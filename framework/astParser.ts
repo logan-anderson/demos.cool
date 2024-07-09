@@ -3,6 +3,7 @@ import { unified } from "unified";
 
 import type { Element } from "hast";
 import rehypeParse from "rehype-parse";
+import { ServerFrameworkContext } from "./frameworkContext";
 
 type InjectScript =
   | {
@@ -55,6 +56,23 @@ export const injectPlugin = ({
   injectScript?: InjectScript;
   innerHtml: string;
 }) => {
+  const savedProps = new ServerFrameworkContext().getInstance().getProps();
+  const els: Element[] = [];
+  if (Object.keys(savedProps).length > 0) {
+    els.push({
+      tagName: "script",
+      type: "element",
+      properties: {
+        type: "application/json",
+      },
+      children: [
+        {
+          type: "text",
+          value: JSON.stringify(savedProps),
+        },
+      ],
+    });
+  }
   const innerElArr = unified()
     .use(rehypeParse, {
       fragment: true,
@@ -64,7 +82,15 @@ export const injectPlugin = ({
 
   return (tree) => {
     visit(tree, "element", (node: Element) => {
+      if (els.length > 0 && !injectScript) {
+        console.warn(
+          "Props were not injected because injectScript was not provided"
+        );
+      }
       if (node.tagName === "body" && injectScript) {
+        if (els.length > 0) {
+          node.children.push(...els);
+        }
         node.children.push({
           type: "element",
           tagName: "script",
