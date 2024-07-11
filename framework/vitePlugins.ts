@@ -1,26 +1,8 @@
 import type { PluginOption } from "vite";
-
-// const addCustomScriptTag: PluginOption = {
-//   name: "add-custom-script-tag",
-//   transformIndexHtml: (html, opts) => {
-//     console.log({
-//       opts,
-//     });
-//     return [
-//       {
-//         tag: "script",
-//         injectTo: "body",
-//         attrs: {
-//           "data-reload": true,
-//           type: "module",
-//           src: "/demos/local-llm/src/entry-client.tsx",
-//         },
-//       },
-//     ];
-//   },
-// };
+import vuePlugin from "@vitejs/plugin-vue";
 
 export const vitePlugins = [
+  vuePlugin(),
   {
     name: "add-data-reload-script-attr",
     enforce: "post",
